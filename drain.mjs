@@ -50,27 +50,31 @@ const K = {
 
 // ---- Protected paths (static pre-flight) ----
 const HOME = os.homedir();
-const PROTECTED_PREFIXES = [
+// Check both tilde and expanded forms since briefs are free-form text and `~/...`
+// can appear mid-string (not just as a leading prefix).
+const PROTECTED_SUBSTRINGS = [
   `${HOME}/clawd/tools/notion-sync/`,
-  // core file itself — subcommand handlers in child scripts are allowed
+  '~/clawd/tools/notion-sync/',
   `${HOME}/.openclaw/skills/acmi/acmi.mjs`,
+  '~/.openclaw/skills/acmi/acmi.mjs',
 ];
 
 function violatesProtectedPath(item) {
-  const targets = [item.brief || ''];
+  const targets = [item.brief || '', item.title || ''];
   if (Array.isArray(item.context_refs)) {
     for (const ref of item.context_refs) {
       if (ref?.type === 'file' && typeof ref.path === 'string') targets.push(ref.path);
+      if (ref?.type === 'acmi' && typeof ref.key === 'string') targets.push(ref.key);
+      if (ref?.type === 'url' && typeof ref.url === 'string') targets.push(ref.url);
     }
   }
-  if (item.deliverable?.type === 'file' && typeof item.deliverable.target === 'string') {
+  if (item.deliverable && typeof item.deliverable.target === 'string') {
     targets.push(item.deliverable.target);
   }
-  const expand = (s) => (typeof s === 'string' ? s.replace(/^~/, HOME) : '');
   for (const t of targets) {
-    const expanded = expand(t);
-    for (const prefix of PROTECTED_PREFIXES) {
-      if (expanded.includes(prefix)) return true;
+    if (typeof t !== 'string') continue;
+    for (const sub of PROTECTED_SUBSTRINGS) {
+      if (t.includes(sub)) return true;
     }
   }
   return false;
