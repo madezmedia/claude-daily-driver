@@ -1,0 +1,9 @@
+{
+  "sandbox": {
+    "network": {
+      "allowedDomains": [
+        "loved-platypus-102968.upstash.io"
+      ]
+    }
+  }
+}
