@@ -1,0 +1,18 @@
+{
+  "jobs": [
+    {
+      "id": "tracker-reaper-reap",
+      "schedule": "0 */6 * * *",
+      "command": "node ~/clawd/tools/acmi-sync/tracker-reaper.mjs --reap",
+      "description": "Scan for stalled tracker items every 6 hours",
+      "env": ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"]
+    },
+    {
+      "id": "tracker-reaper-close",
+      "schedule": "0 11 * * 1",
+      "command": "node ~/clawd/tools/acmi-sync/tracker-reaper.mjs --close",
+      "description": "Weekly closer: summarize and archive completed trackers (Monday 11:00)",
+      "env": ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"]
+    }
+  ]
+}
