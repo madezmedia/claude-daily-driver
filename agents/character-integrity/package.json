@@ -1,0 +1,14 @@
+{
+  "name": "character-integrity-agent",
+  "version": "0.1.0",
+  "description": "EZI Influencer 360 — character data-integrity agent",
+  "type": "module",
+  "main": "src/index.mjs",
+  "bin": {
+    "character-integrity": "src/index.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
